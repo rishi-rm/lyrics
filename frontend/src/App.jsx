@@ -38,15 +38,7 @@ function App() {
       {/* Input Box */}
       <div className="w-[60rem] bg-white/70 backdrop-blur-md shadow-xl rounded-2xl p-8 flex flex-col gap-8">
 
-        <div className="flex flex-col">
-          <label className="text-lg font-semibold pb-1 text-gray-700">Artist</label>
-          <input
-            className="border border-gray-400 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 text-lg outline-none transition-all"
-            placeholder="Aerosmith"
-            value={artist}
-            onChange={(e) => setArtist(e.target.value)}
-          />
-        </div>
+
 
         <div className="flex flex-col">
           <label className="text-lg font-semibold pb-1 text-gray-700">Song</label>
@@ -55,6 +47,16 @@ function App() {
             placeholder="Dream On"
             value={song}
             onChange={(e) => setSong(e.target.value)}
+          />
+        </div>
+
+        <div className="flex flex-col">
+          <label className="text-lg font-semibold pb-1 text-gray-700">Artist</label>
+          <input
+            className="border border-gray-400 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 text-lg outline-none transition-all"
+            placeholder="Aerosmith"
+            value={artist}
+            onChange={(e) => setArtist(e.target.value)}
           />
         </div>
 

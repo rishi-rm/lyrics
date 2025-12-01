@@ -10,35 +10,43 @@ const tempartist = "Aerosmith"
 const tempsong = "dream-on"
 
 
-app.get("/",(req, res)=>{
+app.get("/", (req, res) => {
     res.send("Api running.")
 })
 
-app.get("/lyrics", async(req, res)=>{
-    const artist = req.query.artist
-    const song = req.query.song
+app.get("/lyrics", async (req, res) => {
+    const artist = req.query.artist;
+    const song = req.query.song;
 
-    //dummy data
-    // const artist = tempartist
-    // const song = tempsong
-    // https://genius.com/Playboi-carti-magnolia-lyrics
-    const url = `https://genius.com/${artist}-${song}-lyrics`
-    const {data} = await axios(url)
+    const url = `https://genius.com/${artist}-${song}-lyrics`;
+    const { data } = await axios(url);
 
-    const $ = cheerio.load(data)
-    const lyrics = []
-   $('div[data-lyrics-container="true"] span[class*="ReferentFragment-desktop__Highlight"]').each((i, el) => {
-        const line = $(el).html()
-            .replace(/<br>/g, "\n") // keep line breaks properly
-            .replace(/&ZeroWidthSpace;/g, "") // remove invisible chars
-            .trim();
+    const $ = cheerio.load(data);
+    let lyrics = [];
 
-        lyrics.push(line);
+    $('div[data-lyrics-container="true"]').each((i, el) => {
+        $(el).contents().each((_, node) => {
+
+            if (node.type === "text") {
+                const line = $(node).text().trim();
+                if (line.length) lyrics.push(line);
+            }
+
+            if (node.type === "tag") {
+                const line = $(node)
+                    .text()
+                    .replace(/&ZeroWidthSpace;/g, "")
+                    .trim();
+
+                if (line.length) lyrics.push(line);
+            }
+
+        });
     });
 
-    res.send(lyrics)
-})
+    res.send(lyrics.slice(1));
+});
 
-app.listen(5000,()=>{
+app.listen(5000, () => {
     console.log("server live at: http://localhost:5000")
 })

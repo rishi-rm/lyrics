@@ -2,12 +2,14 @@ import express from "express"
 import axios from "axios"
 import cors from "cors"
 import * as cheerio from "cheerio"
+import "./db.js"
 
 const app = express()
 
 app.use(cors())
-const tempartist = "Aerosmith"
-const tempsong = "dream-on"
+
+app.get("/search", (req, res)=>{
+})
 
 
 app.get("/", (req, res) => {

@@ -1,9 +1,85 @@
-import { useState } from 'react'
+import { useEffect } from 'react'
+import { useState, useMemo } from 'react'
 function App() {
 
   const [artist, setArtist] = useState("")
   const [song, setSong] = useState("")
   const [lyrics, setLyrics] = useState([])
+  const [focused, setFocused] = useState(false)
+  const songs =[
+  {
+    "id": "dream-on",
+    "title": "Dream On",
+    "artist": "Aerosmith",
+    "album": "Aerosmith",
+    "release_year": 1973,
+    "genre": "Rock",
+    "duration": "4:28"
+  },
+  {
+    "id": "on-that-time",
+    "title": "On That Time",
+    "artist": "playboi carti",
+    "album": "Single",
+    "release_year": 2020,
+    "genre": "Alternative",
+    "duration": "3:35"
+  },
+  {
+    "id": "let-it-happen",
+    "title": "Let It Happen",
+    "artist": "Tame Impala",
+    "album": "Currents",
+    "release_year": 2015,
+    "genre": "Psychedelic Pop",
+    "duration": "7:48"
+  },
+  {
+    "id": "crank",
+    "title": "Crank",
+    "artist": "Playboi Carti",
+    "album": "Music",
+    "release_year": 2024,
+    "genre": "Pop rap",
+    "duration": "2:27"
+  },
+  {
+    "id": "on-sight",
+    "title": "On Sight",
+    "artist": "Kanye West",
+    "album": "Yeezus",
+    "release_year": 2013,
+    "genre": "Experimental Hip-Hop",
+    "duration": "2:36"
+  },
+  {
+    "id": "tore-up",
+    "title": "Tore Up",
+    "artist": "Don Toliver",
+    "album": "Hardstone Psycho",
+    "release_year": 2024,
+    "genre": "Rage",
+    "duration": "3:11"
+  },
+  {
+    "id": "all-red",
+    "title": "All Red",
+    "artist": "Playboi Carti",
+    "album": "Single",
+    "release_year": 2021,
+    "genre": "Pop-rap",
+    "duration": "2:58"
+  }
+]
+
+
+  const suggestions = useMemo(() => {
+    return songs.filter(s =>
+      s.title.toLowerCase().includes(song.toLowerCase().trim())
+    );
+  }, [song, songs]);
+
+
   const getLyrics = async () => {
     if (artist.trim() === "" || song.trim() === "") return
 
@@ -36,9 +112,7 @@ function App() {
       </h1>
 
       {/* Input Box */}
-      <div className="w-[60rem] bg-white/70 backdrop-blur-md shadow-xl rounded-2xl p-8 flex flex-col gap-8">
-
-
+      <div className="w-[60rem] bg-white/70 backdrop-blur-md shadow-xl rounded-2xl p-8 flex flex-col gap-8 relative">
 
         <div className="flex flex-col">
           <label className="text-lg font-semibold pb-1 text-gray-700">Song</label>
@@ -46,10 +120,28 @@ function App() {
             className="border border-gray-400 rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 text-lg outline-none transition-all"
             placeholder="Dream On"
             value={song}
-            onChange={(e) => setSong(e.target.value)}
+            onChange={(e) => { setSong(e.target.value) }}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
           />
         </div>
-
+        {
+          song && focused && suggestions.length > 0 &&
+          <div className='w-full max-h-[10rem] bg-white rounded-lg p-4 border-2 border-gray-400 overflow-y-scroll absolute z-100 top-[7rem]'
+            onMouseDown={(e) => e.preventDefault()}
+          >
+            <ul className='flex flex-col gap-2'>
+              {
+                suggestions.map((suggestion, key) => {
+                  return <li className='bg-[#ECECF2] p-2 rounded cursor-pointer' key={key} onClick={() => {
+                    setSong(suggestion.title)
+                    setArtist(suggestion.artist)
+                  }}>{suggestion.title}</li>
+                })
+              }
+            </ul>
+          </div>
+        }
         <div className="flex flex-col">
           <label className="text-lg font-semibold pb-1 text-gray-700">Artist</label>
           <input
